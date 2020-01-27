@@ -1,0 +1,38 @@
+﻿@startuml
+
+class User {
+	+ int Id
+	+ string FirstName
+	+ string LastName
+	  
+	+ void SomeBehavior()
+}
+
+class UserExtensions {
+	+ string Desctiption
+	  
+	+ void AdditionalBehavior()
+}
+
+User <|-- UserExtensions : Inheritance/extension
+
+
+
+interface IInterface {
+	+ void Method()
+}
+
+class Class {
+	+ void Method()
+}
+
+IInterface <|.. Class : Implementation
+
+
+
+
+
+
+
+
+@enduml
