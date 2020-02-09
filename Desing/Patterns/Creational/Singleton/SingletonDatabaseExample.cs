@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using MoreLinq;
 using NUnit.Framework;
-
+using Autofac;
 // trouble with singleton
 namespace Design.Patterns.Creational.Singleton
 {
@@ -52,7 +52,6 @@ namespace Design.Patterns.Creational.Singleton
     // finder for sum several population
     // TROUBLE TESTIN THERE 
     // firmly dependent on DataBaseClass and test throuble
-
     public class SingletonRecordFinder
     {
         public int TotalPopulation(IEnumerable<string> names)
@@ -79,21 +78,43 @@ namespace Design.Patterns.Creational.Singleton
     public class DummyDatabase : IDatabase
     {
         public int GetPopulation(string name)
-            =>
-            new Dictionary<string, int>
-            { ["a"] = 1, ["b"] = 2, ["c"] = 3 }
-            [name];
+            => new Dictionary<string, int>
+            {
+                ["a"] = 1,
+                ["b"] = 2,
+                ["c"] = 3
+            }[name];
     }
     // how will be looking test
     // this fake database can be size - grader available ram
-    public class DependetTotalPopulationClass
+    public class DependentTotalPopulationClass
     {
         [Test]
-        public void DependetTotalPopulationTest()
+        public void DependentTotalPopulationTest()
         {
             var db = new DummyDatabase();
             var rf = new ConfigurableRecordFinder(db);
             Assert.That(rf.GetTotalPopulation(new[] { "a", "c" }), Is.EqualTo(4));
         }
     }
+    // Singleton and IofC with DI framework Autofac
+    class InversionOfControl
+    {
+        // init container
+        readonly ContainerBuilder _builder = new ContainerBuilder();
+
+        public InversionOfControl()
+        {
+            // build singleInstance
+            _builder.RegisterType<SingletonDatabase>().SingleInstance();
+            _builder.RegisterType<ConfigurableRecordFinder>();
+
+            var container = _builder.Build();
+            var finder = container.Resolve<ConfigurableRecordFinder>();
+            var finder2 = container.Resolve<ConfigurableRecordFinder>();
+
+            var IsEquals = ReferenceEquals(finder, finder2);
+        }
+    }
+
 }

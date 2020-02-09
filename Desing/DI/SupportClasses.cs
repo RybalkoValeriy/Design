@@ -6,16 +6,25 @@ using System.Threading.Tasks;
 
 namespace Design.DI
 {
-    public interface ISomeService { }
-    public class ServiceReleasesDefault : ISomeService { }
-    public class ServiceReleasesMock : ISomeService { }
+    public interface ISomeService
+    {
 
+    }
+    
+    public class ServiceReleasesDefault : ISomeService 
+    {
+
+    }
+    
+    public class ServiceReleasesMock : ISomeService 
+    {
+
+    }
 
     public interface IInjectionSomeServiceInterface
     {
         void Inject(ISomeService service);
     }
-
 
     public class FabricMethod
     {
